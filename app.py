@@ -14,7 +14,7 @@ def generate_response(english_query, target_language):
     chat_completion = client.chat.completions.create(
         model="mistralai/Mistral-7B-Instruct-v0.2",
         messages=[
-            {"role": "system", "content": f"You are an assistant that helps users learn {target_language}. Help translate the below content. "},
+            {"role": "system", "content": f"You are an assistant that helps users learn {target_language}. Help translate the below content along with the pronounciation."},
             {"role": "user", "content": english_query},
         ],
         temperature=0.7,
@@ -25,7 +25,7 @@ def generate_response(english_query, target_language):
 with st.form('my_form'):
 
     english_query = st.text_input("Enter text to translate:")
-    target_language = st.selectbox("Select target language:", ["Spanish", "French", "German", "Chinese"])
+    target_language = st.selectbox("Select target language:", ["Tamil", "Spanish", "French", "German", "Chinese"])
 
 
     submitted = st.form_submit_button('Submit')
