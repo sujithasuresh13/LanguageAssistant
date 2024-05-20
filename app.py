@@ -1,29 +1,35 @@
-import streamlit as st
 import openai
+import streamlit as st
 
-st.title("Language Learning Assistant")
+st.title('Language Learning Assistant')
 
-aimlkey = st.text_input("Enter your OpenAI API key:", type="password")
+api_key = st.sidebar.text_input('Enter your OpenAI API key: ', type='password')
 
-if aimlkey:
-    openai.api_key = aimlkey
+client = openai.OpenAI(
+    api_key= api_key,
+    base_url="https://api.aimlapi.com/",
+)
 
-    text_to_translate = st.text_area("Enter text to translate:")
-    target_language = st.selectbox("Select target language:", ["Tamil", "Spanish", "French", "German", "Chinese"])
+def generate_response(prompt):
+    chat_completion = client.chat.completions.create(
+        model="mistralai/Mistral-7B-Instruct-v0.2",
+        messages=[
+            {"role": "system", "content": f"You are an assistant that helps users learn {target_language}."},
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0.7,
+        max_tokens=512,
+    )
+    chat_completion.choices[0].message.content
 
-    if st.button("Translate"):
-        if text_to_translate:
-            prompt = f"Translate the following text to {target_language} and provide example sentences: {text_to_translate}"
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": f"You are an assistant that helps users learn {target_language}."},
-                    {"role": "user", "content": prompt},
-                ],
-            )
-            translation = response.choices[0].message['content']
-            st.write(translation)
-        else:
-            st.warning("Please enter text to translate.")
-else:
-    st.warning("Please enter your OpenAI API key.")
+with st.form('my_form'):
+
+    english_query = st.text_input("Enter text to translate:")
+
+    submitted = st.form_submit_button('Submit')
+   
+    if submitted:
+        try:
+            generate_response(english_query)
+        except Exception as e:
+            print('Failed to generate : %s', repr(e))
