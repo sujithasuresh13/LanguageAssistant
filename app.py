@@ -10,7 +10,7 @@ client = openai.OpenAI(
     base_url="https://api.aimlapi.com/",
 )
 
-def generate_response(prompt):
+def generate_response(prompt, target_language):
     chat_completion = client.chat.completions.create(
         model="mistralai/Mistral-7B-Instruct-v0.2",
         messages=[
@@ -25,11 +25,13 @@ def generate_response(prompt):
 with st.form('my_form'):
 
     english_query = st.text_input("Enter text to translate:")
+    target_language = st.selectbox("Select target language:", ["Spanish", "French", "German", "Chinese"])
+
 
     submitted = st.form_submit_button('Submit')
    
     if submitted:
         try:
-            generate_response(english_query)
+            generate_response(english_query, target_language)
         except Exception as e:
             print('Failed to generate : %s', repr(e))
