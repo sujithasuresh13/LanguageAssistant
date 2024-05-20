@@ -14,7 +14,7 @@ def generate_response(english_query, target_language):
     chat_completion = client.chat.completions.create(
         model="mistralai/Mistral-7B-Instruct-v0.2",
         messages=[
-            {"role": "system", "content": f"You are an assistant that helps users learn {target_language}. Help translate the below content along with the pronounciation."},
+            {"role": "system", "content": f"You are an assistant that helps users learn {target_language}. Help translate the below content along with the pronounciation in latest simple terms and user readable way."},
             {"role": "user", "content": english_query},
         ],
         temperature=0.7,
